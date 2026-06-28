@@ -1,0 +1,15 @@
+.DS_Store
+submission.csv
+submission_*.csv
+embeddings/
+cross_encoder_model/
+ce_scores.npy
+kaggle/
+.venv/
+__pycache__/
+*.pyc
+*.npy
+items.csv
+sample_submission.csv
+terms.csv
+training_pairs.csv
