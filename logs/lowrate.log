@@ -1,0 +1,51 @@
+Loading data...  (CE=ce_scores.npy, suffix='none')
+  3,359,679 test pairs | 250,000 training positives
+
+Building negatives (easy random + hard same-category)...
+  {0: 482293, 1: 250000}
+Fitting TF-IDF on catalog...
+Extracting train/val features (train=583,445, val=148,848)...
+Training LightGBM...
+[LightGBM] [Info] Number of positive: 199159, number of negative: 384286
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.005440 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 451
+[LightGBM] [Info] Number of data points in the train set: 583445, number of used features: 11
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.341350 -> initscore=-0.657284
+[LightGBM] [Info] Start training from score -0.657284
+Training until validation scores don't improve for 50 rounds
+[100]	valid_0's binary_logloss: 0.316823
+Early stopping, best iteration is:
+[144]	valid_0's binary_logloss: 0.316483
+  LightGBM val macro-F1=0.8470  (val threshold=0.44)
+
+Extracting test features (3.36M pairs)...
+Loading cross-encoder scores...
+  CE   min=0.000 mean=0.386 max=0.999
+  LGBM min=0.001 mean=0.237 max=0.995
+
+Writing candidate submissions (blend, varying positive-rate):
+  submission_blend_p20.csv: pos=671,936 (20%)
+  submission_blend_p22.csv: pos=739,129 (22%)
+  submission_blend_p24.csv: pos=806,323 (24%)
+  submission_blend_p26.csv: pos=873,517 (26%)
+  submission_blend_p28.csv: pos=940,710 (28%)
+  submission_blend_p30.csv: pos=1,007,904 (30%)
+Writing candidate submissions (LightGBM only):
+  submission_lgbm_p20.csv: pos=671,936 (20%)
+  submission_lgbm_p22.csv: pos=739,129 (22%)
+  submission_lgbm_p24.csv: pos=806,323 (24%)
+  submission_lgbm_p26.csv: pos=873,517 (26%)
+  submission_lgbm_p28.csv: pos=940,710 (28%)
+  submission_lgbm_p30.csv: pos=1,007,904 (30%)
+Writing candidate submissions (cross-encoder only):
+  submission_ce_p20.csv: pos=671,936 (20%)
+  submission_ce_p22.csv: pos=739,129 (22%)
+  submission_ce_p24.csv: pos=806,323 (24%)
+  submission_ce_p26.csv: pos=873,517 (26%)
+  submission_ce_p28.csv: pos=940,710 (28%)
+  submission_ce_p30.csv: pos=1,007,904 (30%)
+
+Default submission.csv = blend @ 40%  (1,343,872 positive)
+Submit the p30/p35/p40/p45/p50 variants and keep whichever scores best.

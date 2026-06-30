@@ -189,10 +189,10 @@ if not SCORES_PATH.exists():
               for tid in pairs["term_id"]]
     i_list = [test_item_text.get(iid, "") for iid in pairs["item_id"]]
 
-    CHUNK     = 10_000
+    CHUNK     = 32   # small batches to avoid MPS OOM
     ce_scores = np.empty(len(pairs), dtype=np.float32)
     with torch.no_grad():
-        for start in tqdm(range(0, len(pairs), CHUNK), desc="Scoring", unit="chunk"):
+        for start in tqdm(range(0, len(pairs), CHUNK), desc="Scoring", unit="batch"):
             end = min(start + CHUNK, len(pairs))
             enc = tokenizer(q_list[start:end], i_list[start:end],
                             padding=True, truncation=True,
@@ -200,6 +200,8 @@ if not SCORES_PATH.exists():
             enc = {k: v.to(device) for k, v in enc.items()}
             logits = model(**enc).logits.squeeze(-1)
             ce_scores[start:end] = torch.sigmoid(logits).cpu().numpy()
+            if start % 100_000 == 0 and start > 0:
+                torch.mps.empty_cache()
 
     np.save(SCORES_PATH, ce_scores)
     print(f"  Skorlar kaydedildi → {SCORES_PATH}")
@@ -258,5 +260,5 @@ predictions = (ce_scores >= best_thresh).astype(np.int8)
 print(f"  1 (relevant): {predictions.sum():,}  |  0 (irrelevant): {(predictions == 0).sum():,}")
 
 submission = pd.DataFrame({"id": pairs["id"].values, "prediction": predictions})
-submission.to_csv("submission.csv", index=False)
-print(f"\nsubmission.csv kaydedildi — {len(submission):,} satır")
+submission.to_csv("submission_v2.csv", index=False)
+print(f"\nsubmission_v2.csv kaydedildi — {len(submission):,} satır")

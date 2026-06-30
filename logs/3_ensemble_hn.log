@@ -1,0 +1,42 @@
+Loading data...  (CE=ce_scores_hn.npy, suffix='_hn')
+  3,359,679 test pairs | 250,000 training positives
+
+Building negatives (easy random + hard same-category)...
+  {0: 482293, 1: 250000}
+Fitting TF-IDF on catalog...
+Extracting train/val features (train=583,445, val=148,848)...
+Training LightGBM...
+[LightGBM] [Info] Number of positive: 199159, number of negative: 384286
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.005067 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 451
+[LightGBM] [Info] Number of data points in the train set: 583445, number of used features: 11
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.341350 -> initscore=-0.657284
+[LightGBM] [Info] Start training from score -0.657284
+Training until validation scores don't improve for 50 rounds
+[100]	valid_0's binary_logloss: 0.316823
+Early stopping, best iteration is:
+[144]	valid_0's binary_logloss: 0.316483
+  LightGBM val macro-F1=0.8470  (val threshold=0.44)
+
+Extracting test features (3.36M pairs)...
+Loading cross-encoder scores...
+  CE   min=0.001 mean=0.220 max=0.994
+  LGBM min=0.001 mean=0.237 max=0.995
+
+Writing candidate submissions (blend, varying positive-rate):
+  submission_blend_p30_hn.csv: pos=1,007,904 (30%)
+  submission_blend_p35_hn.csv: pos=1,175,888 (35%)
+  submission_blend_p40_hn.csv: pos=1,343,872 (40%)
+  submission_blend_p45_hn.csv: pos=1,511,856 (45%)
+  submission_blend_p50_hn.csv: pos=1,679,840 (50%)
+Writing candidate submissions (LightGBM only):
+  submission_lgbm_p30_hn.csv: pos=1,007,904 (30%)
+  submission_lgbm_p35_hn.csv: pos=1,175,888 (35%)
+  submission_lgbm_p40_hn.csv: pos=1,343,872 (40%)
+  submission_lgbm_p45_hn.csv: pos=1,511,856 (45%)
+  submission_lgbm_p50_hn.csv: pos=1,679,840 (50%)
+
+Default submission_hn.csv = blend @ 40%  (1,343,872 positive)
+Submit the p30/p35/p40/p45/p50 variants and keep whichever scores best.
